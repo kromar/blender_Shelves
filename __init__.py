@@ -22,9 +22,14 @@ else:
     from . import preferences
 
 import bpy
-from bpy.props import StringProperty, IntProperty, CollectionProperty 
 from bpy.types import AddonPreferences, PropertyGroup, UIList, Operator, Panel 
-
+from bpy.props import ( StringProperty, 
+                        BoolProperty, 
+                        FloatProperty,
+                        IntProperty,
+                        EnumProperty,
+                        CollectionProperty,
+                        )
 
 bl_info = {
     "name": "Custom Header Buttons",
@@ -45,47 +50,60 @@ icons = ['PREFERENCES',
 ]
 
 
-
 def draw_button(self, context):
     pref = bpy.context.preferences.addons[__package__.split(".")[0]].preferences 
+    scene = context.scene 
+    item = scene.my_list[scene.list_index] 
     if context.region.alignment == 'RIGHT':
         layout = self.layout
         row = layout.row(align=True)
-        for i in range(1, context.scene.list_index):
-            if pref.show_button_text:
-                row.operator(operator=pref.button_operator, 
-                        text=pref.button_text, 
-                        icon=pref.button_icon)
-            else:                
-                row.operator(operator=pref.button_operator, 
-                        text="", 
-                        icon=pref.button_icon)
-            
+        for i in range(0, len(scene.my_list)):
+            if scene.my_list[i].show_button_text:
+                row.operator(operator=scene.my_list[i].button_operator, 
+                            text=scene.my_list[i].button_name, 
+                            icon=scene.my_list[i].button_icon)
+                            
+            else:
+                row.operator(operator=scene.my_list[i].button_operator, 
+                            text="", 
+                            icon=scene.my_list[i].button_icon)
+    return{'FINISHED'}
+
 
 class ListItem(PropertyGroup): 
     """Group of properties representing an item in the list.""" 
-    name: StringProperty( 
-        name="Name", 
-        description="A name for this item", 
-        default="Untitled") 
-        
-    random_prop: StringProperty( 
-        name="Any other property you want", 
-        description="", 
-        default="") 
+    
+    button_name: StringProperty(
+        name="button_name", 
+        description="button_name", 
+        default="name") 
+
+    button_operator: StringProperty(
+        name="button_operator", 
+        description="button_operator", 
+        default="screen.userpref_show") 
+
+    button_icon: StringProperty(
+        name="button_icon", 
+        description="button_icon", 
+        default="FUND")  
+
+    show_button_text: BoolProperty(
+        name="show_button_text",
+        description="show_button_text",
+        default=False) 
         
 
 class MY_UL_List(UIList): 
     """Demo UIList.""" 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index): 
-        # We could write some code to decide which icon to use here... 
-        custom_icon = 'OBJECT_DATAMODE' 
+        
         # # Make sure your code supports all 3 layout types 
         if self.layout_type in {'DEFAULT', 'COMPACT'}: 
-            layout.label(text=item.name, icon = custom_icon) 
+            layout.label(text=item.button_name, icon = item.button_icon) 
         elif self.layout_type in {'GRID'}: 
             layout.alignment = 'CENTER' 
-            layout.label(text="", icon = custom_icon) 
+            layout.label(text=item.button_name, icon = item.button_icon) 
             
             
 class LIST_OT_NewItem(Operator): 
@@ -94,6 +112,7 @@ class LIST_OT_NewItem(Operator):
     bl_label = "Add a new item" 
     def execute(self, context): 
         context.scene.my_list.add() 
+        draw_button(self, context)
         return{'FINISHED'} 
         
         
@@ -111,6 +130,7 @@ class LIST_OT_DeleteItem(Operator):
         index = context.scene.list_index 
         my_list.remove(index) 
         context.scene.list_index = min(max(0, index - 1), len(my_list) - 1) 
+        draw_button(self, context)
         return{'FINISHED'} 
         
         
@@ -138,6 +158,7 @@ class LIST_OT_MoveItem(Operator):
         neighbor = index + (-1 if self.direction == 'UP' else 1) 
         my_list.move(neighbor, index) 
         self.move_index() 
+        draw_button(self, context)
         return{'FINISHED'} 
         
 

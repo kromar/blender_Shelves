@@ -40,51 +40,27 @@ class CHB_Preferences(AddonPreferences):
         step=1,
         subtype='FACTOR')
 
-    button_name: StringProperty(
-        name="button_name", 
-        description="button_name", 
-        default="name") 
-    button_operator: StringProperty(
-        name="button_operator", 
-        description="button_operator", 
-        default="screen.userpref_show") 
-    button_icon: StringProperty(
-        name="button_icon", 
-        description="button_icon", 
-        default="FUND")  
-    button_text: StringProperty(
-        name="button_text", 
-        description="button_text", 
-        default="text")
-    show_button_text: BoolProperty(
-        name="show_button_text",
-        description="show_button_text",
-        default=False) 
-        
 
-    def draw(self, context):        
-        layout = self.layout
-        #layout.use_property_split = True
-        col = layout.column(align=True)
-        col.prop(self, 'button_count')
-        col.prop(self, 'button_name')
-        col.prop(self, 'button_operator') 
-        col.prop(self, 'button_icon')
-        col.prop(self, 'button_text')        
-        col.prop(self, 'show_button_text') 
-        scene = bpy.context.scene 
-
+    def draw(self, context):
         scene = context.scene 
+
+        layout = self.layout
+        layout.use_property_split = True
+         
         row = layout.row() 
-        row.template_list("MY_UL_List", "The_List", scene, "my_list", scene, "list_index") 
+        row.operator('my_list.new_item', text='New') 
+        row.operator('my_list.delete_item', text='Delete') 
+        row.operator('my_list.move_item', text='Up').direction = 'UP' 
+        row.operator('my_list.move_item', text='Down').direction = 'DOWN' 
+        
         row = layout.row() 
-        row.operator('my_list.new_item', text='NEW') 
-        row.operator('my_list.delete_item', text='REMOVE') 
-        row.operator('my_list.move_item', text='UP').direction = 'UP' 
-        row.operator('my_list.move_item', text='DOWN').direction = 'DOWN' 
+        row.template_list("MY_UL_List", "Custom Header Buttons List ", scene, "my_list", scene, "list_index") 
         
         if scene.list_index >= 0 and scene.my_list: 
             item = scene.my_list[scene.list_index] 
-            row = layout.row() 
-            row.prop(item, "name") 
-            row.prop(item, "random_prop") 
+
+            col = layout.column(align=True)
+            col.prop(item, "button_name") 
+            col.prop(item, "button_operator") 
+            col.prop(item, "button_icon") 
+            col.prop(item, "show_button_text")
