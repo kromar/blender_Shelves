@@ -22,7 +22,8 @@ else:
     from . import preferences
 
 import bpy
-from bpy.types import AddonPreferences, PropertyGroup, UIList, Operator, Panel 
+from bl_operators.presets import AddPresetBase
+from bpy.types import AddonPreferences, Menu, PropertyGroup, UIList, Operator, Panel 
 from bpy.props import ( StringProperty, 
                         BoolProperty, 
                         FloatProperty,
@@ -53,110 +54,111 @@ icons = ['PREFERENCES',
 def draw_button(self, context):
     pref = bpy.context.preferences.addons[__package__.split(".")[0]].preferences 
     scene = context.scene 
-    item = scene.my_list[scene.list_index] 
-    if context.region.alignment == 'RIGHT':
-        layout = self.layout
-        row = layout.row(align=True)
-        for i in range(0, len(scene.my_list)):
-            if scene.my_list[i].show_button_text:
-                row.operator(operator=scene.my_list[i].button_operator, 
-                            text=scene.my_list[i].button_name, 
-                            icon=scene.my_list[i].button_icon)
-                            
-            else:
-                row.operator(operator=scene.my_list[i].button_operator, 
-                            text="", 
-                            icon=scene.my_list[i].button_icon)
-    return{'FINISHED'}
+    if scene.chb_list:
+        item = scene.chb_list[scene.chb_list_index] 
+        if context.region.alignment == 'RIGHT':
+            layout = self.layout
+            row = layout.row(align=True)
+            for i in range(0, len(scene.chb_list)):
+                if scene.chb_list[i].show_button_text:
+                    row.operator(operator=scene.chb_list[i].button_operator, 
+                                text=scene.chb_list[i].button_name, 
+                                icon=scene.chb_list[i].button_icon)
+                                
+                else:
+                    row.operator(operator=scene.chb_list[i].button_operator, 
+                                text="", 
+                                icon=scene.chb_list[i].button_icon)
+        return{'FINISHED'}
 
 
-class ListItem(PropertyGroup): 
+
+class CHB_ListItem(PropertyGroup): 
     """Group of properties representing an item in the list.""" 
     
     button_name: StringProperty(
-        name="button_name", 
+        name="Name", 
         description="button_name", 
         default="name") 
 
     button_operator: StringProperty(
-        name="button_operator", 
+        name="Operator", 
         description="button_operator", 
         default="screen.userpref_show") 
 
     button_icon: StringProperty(
-        name="button_icon", 
-        description="button_icon", 
+        name="", 
+        description="buton_icon", 
         default="FUND")  
 
     show_button_text: BoolProperty(
-        name="show_button_text",
+        name="",
         description="show_button_text",
         default=False) 
         
 
-class MY_UL_List(UIList): 
+class CHB_UL_List(UIList): 
     """Demo UIList.""" 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index): 
         
-        # # Make sure your code supports all 3 layout types 
-        if self.layout_type in {'DEFAULT', 'COMPACT'}: 
-            layout.label(text=item.button_name, icon = item.button_icon) 
-        elif self.layout_type in {'GRID'}: 
-            layout.alignment = 'CENTER' 
-            layout.label(text=item.button_name, icon = item.button_icon) 
+        layout.label(text="", icon = item.button_icon) 
+        layout.prop(item, "button_icon") 
+        layout.prop(item, "button_name") 
+        layout.prop(item, "show_button_text")
+        layout.prop(item, "button_operator") 
             
             
-class LIST_OT_NewItem(Operator): 
+class CHB_LIST_OT_NewItem(Operator): 
     """Add a new item to the list.""" 
-    bl_idname = "my_list.new_item" 
+    bl_idname = "chb_list.new_item" 
     bl_label = "Add a new item" 
     def execute(self, context): 
-        context.scene.my_list.add() 
+        context.scene.chb_list.add() 
         draw_button(self, context)
         return{'FINISHED'} 
         
         
-class LIST_OT_DeleteItem(Operator): 
+class CHB_LIST_OT_DeleteItem(Operator): 
     """Delete the selected item from the list.""" 
-    bl_idname = "my_list.delete_item" 
+    bl_idname = "chb_list.delete_item" 
     bl_label = "Deletes an item" 
     
     @classmethod 
     def poll(cls, context): 
-        return context.scene.my_list 
+        return context.scene.chb_list 
         
     def execute(self, context): 
-        my_list = context.scene.my_list 
-        index = context.scene.list_index 
-        my_list.remove(index) 
-        context.scene.list_index = min(max(0, index - 1), len(my_list) - 1) 
+        chb_list = context.scene.chb_list 
+        index = context.scene.chb_list_index 
+        chb_list.remove(index) 
+        context.scene.chb_list_index = min(max(0, index - 1), len(chb_list) - 1) 
         draw_button(self, context)
         return{'FINISHED'} 
         
         
-class LIST_OT_MoveItem(Operator): 
+class CHB_LIST_OT_MoveItem(Operator): 
     """Move an item in the list.""" 
-    bl_idname = "my_list.move_item" 
+    bl_idname = "chb_list.move_item" 
     bl_label = "Move an item in the list" 
     direction: bpy.props.EnumProperty(items=(('UP', 'Up', ""), ('DOWN', 'Down', ""),)) 
     
     @classmethod 
     def poll(cls, context): 
-        return context.scene.my_list 
+        return context.scene.chb_list 
         
     def move_index(self): 
         """ Move index of an item render queue while clamping it. """ 
-        index = bpy.context.scene.list_index 
-        list_length = len(bpy.context.scene.my_list) - 1 
+        index = bpy.context.scene.chb_list_index 
+        list_length = len(bpy.context.scene.chb_list) - 1 
         # (index starts at 0) 
         new_index = index + (-1 if self.direction == 'UP' else 1) 
-        bpy.context.scene.list_index = max(0, min(new_index, list_length)) 
+        bpy.context.scene.chb_list_index = max(0, min(new_index, list_length)) 
         
     def execute(self, context): 
-        my_list = context.scene.my_list 
-        index = context.scene.list_index 
+        chb_list = context.scene.chb_list 
+        index = context.scene.chb_list_index 
         neighbor = index + (-1 if self.direction == 'UP' else 1) 
-        my_list.move(neighbor, index) 
+        chb_list.move(neighbor, index) 
         self.move_index() 
         draw_button(self, context)
         return{'FINISHED'} 
@@ -165,11 +167,12 @@ class LIST_OT_MoveItem(Operator):
 
 classes = (
     preferences.CHB_Preferences,
-    ListItem,
-    MY_UL_List,
-    LIST_OT_NewItem,
-    LIST_OT_DeleteItem,
-    LIST_OT_MoveItem,
+
+    CHB_ListItem,
+    CHB_UL_List,
+    CHB_LIST_OT_NewItem,
+    CHB_LIST_OT_DeleteItem,
+    CHB_LIST_OT_MoveItem,
     )            
 
 def register():
@@ -177,13 +180,13 @@ def register():
         bpy.utils.register_class(c)
     bpy.types.TOPBAR_HT_upper_bar.prepend(draw_button)
 
-    bpy.types.Scene.my_list = CollectionProperty(type = ListItem) 
-    bpy.types.Scene.list_index = IntProperty(name = "Index for my_list", default = 0) 
+    bpy.types.Scene.chb_list = CollectionProperty(type = CHB_ListItem) 
+    bpy.types.Scene.chb_list_index = IntProperty(name = "Index for custom header button list", default = 0) 
     
 
 def unregister():
-    del bpy.types.Scene.my_list 
-    del bpy.types.Scene.list_index 
+    del bpy.types.Scene.chb_list 
+    del bpy.types.Scene.chb_list_index 
     bpy.types.TOPBAR_HT_upper_bar.remove(draw_button)
     [bpy.utils.unregister_class(c) for c in classes]
 

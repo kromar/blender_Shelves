@@ -30,37 +30,40 @@ from bpy.props import ( StringProperty,
 
 class CHB_Preferences(AddonPreferences):
     bl_idname = __package__
-    
-    button_count: IntProperty(
-        name="button_count",
-        description="button_count",
-        default=5,
-        min=0,
-        soft_max=20,
-        step=1,
-        subtype='FACTOR')
-
 
     def draw(self, context):
         scene = context.scene 
 
         layout = self.layout
-        layout.use_property_split = True
+        #layout.use_property_split = True         
          
+        row = layout.row()
+        row.template_list("CHB_UL_List", 
+                            "Custom Header Buttons List ", 
+                            scene, 
+                            "chb_list", 
+                            scene, 
+                            "chb_list_index",                            
+                            type='DEFAULT',
+                            columns=1,
+                        ) 
+                        
         row = layout.row() 
-        row.operator('my_list.new_item', text='New') 
-        row.operator('my_list.delete_item', text='Delete') 
-        row.operator('my_list.move_item', text='Up').direction = 'UP' 
-        row.operator('my_list.move_item', text='Down').direction = 'DOWN' 
-        
-        row = layout.row() 
-        row.template_list("MY_UL_List", "Custom Header Buttons List ", scene, "my_list", scene, "list_index") 
-        
-        if scene.list_index >= 0 and scene.my_list: 
-            item = scene.my_list[scene.list_index] 
-
-            col = layout.column(align=True)
-            col.prop(item, "button_name") 
-            col.prop(item, "button_operator") 
-            col.prop(item, "button_icon") 
-            col.prop(item, "show_button_text")
+        row.operator('chb_list.new_item', text='New') 
+        row.operator('chb_list.delete_item', text='Delete') 
+        row.operator('chb_list.move_item', text='Up').direction = 'UP' 
+        row.operator('chb_list.move_item', text='Down').direction = 'DOWN' 
+    
+        #template_list(listtype_name, 
+        #               list_id, 
+        #               dataptr, 
+        #               propname, 
+        #               active_dataptr, 
+        #               active_propname, 
+        #               item_dyntip_propname='', 
+        #               rows=5, 
+        #               maxrows=5, 
+        #               type='DEFAULT', 
+        #               columns=9, 
+        #               sort_reverse=False, 
+        #               sort_lock=False)
