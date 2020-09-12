@@ -19,16 +19,16 @@
     
 """Addon preferences"""
 import bpy
-from bpy.types import AddonPreferences
+from bpy.types import AddonPreferences, PropertyGroup, UIList
 from bpy.props import ( StringProperty, 
                         BoolProperty, 
                         FloatProperty,
                         IntProperty,
-                        PointerProperty,
-                        EnumProperty)
+                        EnumProperty,
+                        )
 
 
-class CHBPreferences(AddonPreferences):
+class CHB_Preferences(AddonPreferences):
     bl_idname = __package__
     
     button_count: IntProperty(
@@ -60,7 +60,7 @@ class CHBPreferences(AddonPreferences):
         name="show_button_text",
         description="show_button_text",
         default=False) 
-
+        
 
     def draw(self, context):        
         layout = self.layout
@@ -71,5 +71,20 @@ class CHBPreferences(AddonPreferences):
         col.prop(self, 'button_operator') 
         col.prop(self, 'button_icon')
         col.prop(self, 'button_text')        
-        col.prop(self, 'show_button_text')
- 
+        col.prop(self, 'show_button_text') 
+        scene = bpy.context.scene 
+
+        scene = context.scene 
+        row = layout.row() 
+        row.template_list("MY_UL_List", "The_List", scene, "my_list", scene, "list_index") 
+        row = layout.row() 
+        row.operator('my_list.new_item', text='NEW') 
+        row.operator('my_list.delete_item', text='REMOVE') 
+        row.operator('my_list.move_item', text='UP').direction = 'UP' 
+        row.operator('my_list.move_item', text='DOWN').direction = 'DOWN' 
+        
+        if scene.list_index >= 0 and scene.my_list: 
+            item = scene.my_list[scene.list_index] 
+            row = layout.row() 
+            row.prop(item, "name") 
+            row.prop(item, "random_prop") 
