@@ -23,6 +23,8 @@ else:
 
 import bpy
 from bl_operators.presets import AddPresetBase
+from bl_ui.utils import PresetPanel
+
 from bpy.types import AddonPreferences, Menu, PropertyGroup, UIList, Operator, Panel 
 from bpy.props import ( StringProperty, 
                         BoolProperty, 
@@ -45,7 +47,6 @@ bl_info = {
 
 
 def draw_button(self, context):
-    pref = bpy.context.preferences.addons[__package__.split(".")[0]].preferences 
     scene = context.scene 
     if scene.chb_list:
         item = scene.chb_list[scene.chb_list_index] 
@@ -56,8 +57,7 @@ def draw_button(self, context):
                 if scene.chb_list[i].show_button_text:
                     row.operator(operator=scene.chb_list[i].button_operator, 
                                 text=scene.chb_list[i].button_name, 
-                                icon=scene.chb_list[i].button_icon)
-                                
+                                icon=scene.chb_list[i].button_icon)                                
                 else:
                     row.operator(operator=scene.chb_list[i].button_operator, 
                                 text="", 
@@ -65,9 +65,34 @@ def draw_button(self, context):
         return{'FINISHED'}
 
 
-class CHB_ListItem(PropertyGroup): 
-    """Group of properties representing an item in the list.""" 
+class CHB_MT_Presets(Menu): 
+    bl_label = 'Custom Buttons Presets' 
+    preset_subdir = 'custom_buttons/buttons' 
+    preset_operator = 'script.execute_preset' 
+    draw = Menu.draw_preset 
+
+
+class CHB_OT_AddPreset(AddPresetBase, Operator): 
+    bl_idname = 'chb_preset.add_preset' 
+    bl_label = 'Add custom buttons preset' 
+    preset_menu = 'CHB_MT_Presets' 
     
+    # Common variable used for all preset values     
+    preset_defines = [  'scene = bpy.context.scene' ,
+                        'item = scene.chb_list[scene.chb_list_index]',
+                        ] 
+    # Properties to store in the preset 
+    preset_values = [   'item.button_icon', 
+                        'item.button_name', 
+                        'item.show_button_text', 
+                        'item.button_operator', 
+                    ] 
+    # Directory to store the presets 
+    preset_subdir = 'custom_buttons/buttons'
+
+
+class CHB_ButtonsList(PropertyGroup): 
+    """Group of properties representing an item in the list."""
     button_name: StringProperty(
         name="Name", 
         description="button_name", 
@@ -89,8 +114,8 @@ class CHB_ListItem(PropertyGroup):
         default=False) 
         
 
-class CHB_UL_List(UIList): 
-    """Demo UIList.""" 
+class CHB_UL_ButtonsList(UIList): 
+    """Custom Buttons List."""    
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index): 
         
         layout.label(text="", icon = item.button_icon) 
@@ -159,8 +184,11 @@ class CHB_LIST_OT_MoveItem(Operator):
 classes = (
     preferences.CHB_Preferences,
 
-    CHB_ListItem,
-    CHB_UL_List,
+    CHB_MT_Presets,
+    CHB_OT_AddPreset,
+
+    CHB_ButtonsList,
+    CHB_UL_ButtonsList,
     CHB_LIST_OT_NewItem,
     CHB_LIST_OT_DeleteItem,
     CHB_LIST_OT_MoveItem,
@@ -169,9 +197,22 @@ classes = (
 def register():
     for c in classes:
         bpy.utils.register_class(c)
+
+    #load default preset
+    """ 
+    custom_buttons_presets = os.path.join(presets_folder, 'custom_buttons', 'buttons') 
+    if not os.path.isdir(custom_buttons_presets): 
+        # makedirs() will also create all the parent folders (like "object") 
+        os.makedirs(custom_buttons_presets) 
+        # Get a list of all the files in your bundled presets folder 
+        files = os.listdir(my_bundled_presets) 
+        # Copy them 
+        [shutil.copy2(os.path.join(my_bundled_presets, f), custom_buttons_presets) for f in files] 
+    """
+
     bpy.types.TOPBAR_HT_upper_bar.prepend(draw_button)
 
-    bpy.types.Scene.chb_list = CollectionProperty(type = CHB_ListItem) 
+    bpy.types.Scene.chb_list = CollectionProperty(type = CHB_ButtonsList) 
     bpy.types.Scene.chb_list_index = IntProperty(name = "Index for custom header button list", default = 0) 
     
 
