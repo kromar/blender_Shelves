@@ -16,8 +16,7 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-    
-"""Addon preferences"""
+
 import bpy
 from bpy.types import AddonPreferences, PropertyGroup, UIList
 from bpy.props import ( StringProperty, 
@@ -52,18 +51,4 @@ class CHB_Preferences(AddonPreferences):
         row.operator('chb_list.new_item', text='New') 
         row.operator('chb_list.delete_item', text='Delete') 
         row.operator('chb_list.move_item', text='Up').direction = 'UP' 
-        row.operator('chb_list.move_item', text='Down').direction = 'DOWN' 
-    
-        #template_list(listtype_name, 
-        #               list_id, 
-        #               dataptr, 
-        #               propname, 
-        #               active_dataptr, 
-        #               active_propname, 
-        #               item_dyntip_propname='', 
-        #               rows=5, 
-        #               maxrows=5, 
-        #               type='DEFAULT', 
-        #               columns=9, 
-        #               sort_reverse=False, 
-        #               sort_lock=False)
+        row.operator('chb_list.move_item', text='Down').direction = 'DOWN'     

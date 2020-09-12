@@ -44,13 +44,6 @@ bl_info = {
 }
 
 
-icons = ['PREFERENCES',
-        'IMPORT',
-        'FILE_BACKUP',
-        'FILE_SCRIPT',
-]
-
-
 def draw_button(self, context):
     pref = bpy.context.preferences.addons[__package__.split(".")[0]].preferences 
     scene = context.scene 
@@ -70,7 +63,6 @@ def draw_button(self, context):
                                 text="", 
                                 icon=scene.chb_list[i].button_icon)
         return{'FINISHED'}
-
 
 
 class CHB_ListItem(PropertyGroup): 
@@ -163,7 +155,6 @@ class CHB_LIST_OT_MoveItem(Operator):
         draw_button(self, context)
         return{'FINISHED'} 
         
-
 
 classes = (
     preferences.CHB_Preferences,
