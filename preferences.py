@@ -40,11 +40,6 @@ class CB_Preferences(AddonPreferences):
         row.operator('custom_buttons_preset.add_preset', text='', icon='ADD')
         row.operator('custom_buttons_preset.add_preset', text='', icon='REMOVE').remove_active = True
        
-        row = layout.row(align=True)  
-        row.label(text="Icon")
-        row.label(text="Name (Show/Hide)")
-        row.label(text="Operator")
-
         row = layout.row(align=True)
         col = row.column(align=True)
         col.template_list("CB_UL_ButtonsList", 

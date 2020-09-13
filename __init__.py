@@ -114,7 +114,7 @@ class CB_ButtonsList(PropertyGroup):
 class CB_UL_ButtonsList(UIList): 
     """Custom Buttons List."""    
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index): 
-        
+        layout.label(text='', icon='RESTRICT_SELECT_OFF')
         layout.prop(item, "button_icon", icon = item.button_icon) 
         layout.prop(item, "button_name") 
         layout.prop(item, "show_button_name")
