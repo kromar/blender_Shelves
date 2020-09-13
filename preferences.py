@@ -30,16 +30,29 @@ from bpy.props import ( StringProperty,
 class CB_Preferences(AddonPreferences):
     bl_idname = __package__
 
+    default_preset: StringProperty(
+        name="default_preset", 
+        description="default_preset", 
+        #default="Custom Buttons Presets"
+        default="Default") 
+
+
     def draw(self, context):
         scene = context.scene 
         layout = self.layout      
 
         row = layout.row(align=True)  
         preset_label = bpy.types.CB_MT_Presets.bl_label
-        row.menu('CB_MT_Presets', text=preset_label)
+        row.menu('CB_MT_Presets', text=self.default_preset)
         row.operator('custom_buttons_preset.add_preset', text='', icon='ADD')
         row.operator('custom_buttons_preset.add_preset', text='', icon='REMOVE').remove_active = True
-       
+        
+        row = layout.row(align=True)  
+        #row.operator('self.default_preset', text="set as default",  icon='ADD')
+        row.prop(self, 'default_preset')
+        self.default_preset = preset_label
+        #row.label(text=self.default_preset)
+
         row = layout.row(align=True)
         col = row.column(align=True)
         col.template_list("CB_UL_ButtonsList", 

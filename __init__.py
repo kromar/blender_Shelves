@@ -48,28 +48,40 @@ bl_info = {
 
 def draw_button(self, context):
     scene = context.scene 
-    if scene.custom_buttons_list:
-        item = scene.custom_buttons_list[scene.custom_buttons_list_index] 
-        if context.region.alignment == 'RIGHT':
-            layout = self.layout
-            row = layout.row(align=True)
-            for i in range(0, len(scene.custom_buttons_list)):
-                if scene.custom_buttons_list[i].show_button_name:
-                    row.operator(operator=scene.custom_buttons_list[i].button_operator, 
-                                text=scene.custom_buttons_list[i].button_name, 
-                                icon=scene.custom_buttons_list[i].button_icon)                                
-                else:
-                    row.operator(operator=scene.custom_buttons_list[i].button_operator, 
-                                text="", 
-                                icon=scene.custom_buttons_list[i].button_icon)
+    #if scene.custom_buttons_list:
+    if context.region.alignment == 'RIGHT':
+        layout = self.layout
+
+
+        row = layout.row(align=True)
+        for i in range(0, len(scene.custom_buttons_list)):
+            if scene.custom_buttons_list[i].show_button_name:
+                row.operator(operator=scene.custom_buttons_list[i].button_operator, 
+                            text=scene.custom_buttons_list[i].button_name, 
+                            icon=scene.custom_buttons_list[i].button_icon)                                
+            else:
+                row.operator(operator=scene.custom_buttons_list[i].button_operator, 
+                            text="", 
+                            icon=scene.custom_buttons_list[i].button_icon)
+        
+        row = layout.row()
+        preset_label = bpy.types.CB_MT_Presets.bl_label
+        row.menu('CB_MT_Presets', text=preset_label, icon='PRESET')
+
         return{'FINISHED'}
 
 
-class CB_MT_Presets(Menu): 
-    bl_label = 'Custom Buttons Presets' 
+class CB_MT_Presets(Menu):        
+    pref = bpy.context.preferences.addons[__package__.split(".")[0]].preferences    
+    try:
+        bl_label = pref.default_preset 
+        print("BLABEL: ", pref.default_preset)
+    except:
+        bl_label = "Shelf"
+
     preset_subdir = 'custom_buttons' 
     preset_operator = 'script.execute_preset' 
-    draw = Menu.draw_preset 
+    draw = Menu.draw_preset
 
 
 class CB_OT_AddPreset(AddPresetBase, Operator): 
@@ -105,6 +117,9 @@ class CB_ButtonsList(PropertyGroup):
         description="buton_icon", 
         default="FUND")  
 
+    
+    
+
     show_button_name: BoolProperty(
         name="",
         description="Show Button Name",
@@ -114,12 +129,12 @@ class CB_ButtonsList(PropertyGroup):
 class CB_UL_ButtonsList(UIList): 
     """Custom Buttons List."""    
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index): 
-        layout.label(text='', icon='RESTRICT_SELECT_OFF')
+        layout.label(text='', icon='TRIA_RIGHT')
         layout.prop(item, "button_icon", icon = item.button_icon) 
         layout.prop(item, "button_name") 
         layout.prop(item, "show_button_name")
         layout.prop(item, "button_operator") 
-            
+                    
             
 class CB_LIST_OT_NewItem(Operator): 
     """Add a new item to the list.""" 
