@@ -71,22 +71,17 @@ def draw_button(self, context):
         return{'FINISHED'}
 
 
-class CB_MT_Presets(Menu):        
-    pref = bpy.context.preferences.addons[__package__.split(".")[0]].preferences    
-    try:
-        bl_label = pref.default_preset 
-        print("BLABEL: ", pref.default_preset)
-    except:
-        bl_label = "Shelf"
-
+class CB_MT_Presets(Menu):  
+    bl_label = "Shelfes"
     preset_subdir = 'custom_buttons' 
     preset_operator = 'script.execute_preset' 
     draw = Menu.draw_preset
 
 
-class CB_OT_AddPreset(AddPresetBase, Operator): 
-    bl_idname = 'custom_buttons_preset.add_preset' 
-    bl_label = 'Add custom buttons preset' 
+class CB_OT_SavePreset(AddPresetBase, Operator): 
+    """ Save Preset """
+    bl_idname = 'custom_buttons_preset.save_preset' 
+    bl_label = 'Save Shelf' 
     preset_menu = 'CB_MT_Presets' 
     preset_subdir = 'custom_buttons'
     
@@ -116,9 +111,6 @@ class CB_ButtonsList(PropertyGroup):
         name="", 
         description="buton_icon", 
         default="FUND")  
-
-    
-    
 
     show_button_name: BoolProperty(
         name="",
@@ -193,7 +185,7 @@ classes = (
     preferences.CB_Preferences,
 
     CB_MT_Presets,
-    CB_OT_AddPreset,
+    CB_OT_SavePreset,
 
     CB_ButtonsList,
     CB_UL_ButtonsList,

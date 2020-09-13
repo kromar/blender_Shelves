@@ -33,7 +33,6 @@ class CB_Preferences(AddonPreferences):
     default_preset: StringProperty(
         name="default_preset", 
         description="default_preset", 
-        #default="Custom Buttons Presets"
         default="Default") 
 
 
@@ -44,8 +43,9 @@ class CB_Preferences(AddonPreferences):
         row = layout.row(align=True)  
         preset_label = bpy.types.CB_MT_Presets.bl_label
         row.menu('CB_MT_Presets', text=self.default_preset)
-        row.operator('custom_buttons_preset.add_preset', text='', icon='ADD')
-        row.operator('custom_buttons_preset.add_preset', text='', icon='REMOVE').remove_active = True
+        row.operator('custom_buttons_preset.save_preset', text='', icon='ADD')
+        row.operator('custom_buttons_preset.save_preset', text='', icon='REMOVE').remove_active = True
+        
         
         row = layout.row(align=True)  
         #row.operator('self.default_preset', text="set as default",  icon='ADD')
