@@ -35,8 +35,8 @@ from bpy.props import ( StringProperty,
                         )
 
 bl_info = {
-    "name": "Custom Header Buttons",
-    "description": "Customize operators to use via header buttons",
+    "name": "Custom Buttons",
+    "description": "Creat your costom buttons in the Header",
     "author": "Daniel Grauer",
     "version": (1, 0, 0),
     "blender": (2, 83, 0),
@@ -67,7 +67,7 @@ def draw_button(self, context):
 
 class CB_MT_Presets(Menu): 
     bl_label = 'Custom Buttons Presets' 
-    preset_subdir = 'custom_buttons/buttons' 
+    preset_subdir = 'custom_buttons' 
     preset_operator = 'script.execute_preset' 
     draw = Menu.draw_preset 
 
@@ -76,7 +76,7 @@ class CB_OT_AddPreset(AddPresetBase, Operator):
     bl_idname = 'custom_buttons_preset.add_preset' 
     bl_label = 'Add custom buttons preset' 
     preset_menu = 'CB_MT_Presets' 
-    preset_subdir = 'custom_buttons/buttons'
+    preset_subdir = 'custom_buttons'
     
     # Common variable used for all preset values     
     preset_defines = [
@@ -108,7 +108,7 @@ class CB_ButtonsList(PropertyGroup):
     show_button_name: BoolProperty(
         name="",
         description="Show Button Name",
-        default=True) 
+        default=False) 
         
 
 class CB_UL_ButtonsList(UIList): 
