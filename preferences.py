@@ -27,33 +27,38 @@ from bpy.props import ( StringProperty,
                         )
 
 
-class CHB_Preferences(AddonPreferences):
+class CB_Preferences(AddonPreferences):
     bl_idname = __package__
 
     def draw(self, context):
         scene = context.scene 
-        layout = self.layout        
+        layout = self.layout      
+
         row = layout.row(align=True)  
-        preset_label = bpy.types.CHB_MT_Presets.bl_label
-        row.menu('CHB_MT_Presets', text=preset_label)
-        row.operator('chb_preset.add_preset', text='', icon='ADD')
-        row.operator('chb_preset.add_preset', text='', icon='REMOVE').remove_active = True
+        preset_label = bpy.types.CB_MT_Presets.bl_label
+        row.menu('CB_MT_Presets', text=preset_label)
+        row.operator('custom_buttons_preset.add_preset', text='', icon='ADD')
+        row.operator('custom_buttons_preset.add_preset', text='', icon='REMOVE').remove_active = True
        
-       
+        row = layout.row(align=True)  
+        row.label(text="Icon")
+        row.label(text="Name (Show/Hide)")
+        row.label(text="Operator")
+
         row = layout.row(align=True)
         col = row.column(align=True)
-        col.template_list("CHB_UL_ButtonsList", 
+        col.template_list("CB_UL_ButtonsList", 
                             "Custom Header Buttons List ", 
                             scene, 
-                            "chb_list", 
+                            "custom_buttons_list", 
                             scene, 
-                            "chb_list_index",                            
+                            "custom_buttons_list_index",                            
                             type='DEFAULT',
                             columns=1,
                         ) 
                         
         col = row.column(align=True)
-        col.operator('chb_list.new_item', text='', icon='ADD') 
-        col.operator('chb_list.delete_item', text='', icon='REMOVE')  
-        col.operator('chb_list.move_item', text='', icon='TRIA_UP').direction = 'UP'   
-        col.operator('chb_list.move_item', text='', icon='TRIA_DOWN').direction = 'DOWN' 
+        col.operator('custom_buttons_list.new_item', text='', icon='ADD') 
+        col.operator('custom_buttons_list.delete_item', text='', icon='REMOVE')  
+        col.operator('custom_buttons_list.move_item', text='', icon='TRIA_UP').direction = 'UP'   
+        col.operator('custom_buttons_list.move_item', text='', icon='TRIA_DOWN').direction = 'DOWN' 
