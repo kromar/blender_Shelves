@@ -40,7 +40,7 @@ bl_info = {
     "author": "Daniel Grauer",
     "version": (1, 0, 0),
     "blender": (2, 83, 0),
-    "location": "TopBar",
+    "location": "Header",
     "category": "System",
     "wiki_url": ""
 }
