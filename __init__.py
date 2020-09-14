@@ -22,6 +22,8 @@ else:
     from . import preferences
 
 import bpy
+import os
+import shutil
 from bl_operators.presets import AddPresetBase
 from bl_ui.utils import PresetPanel
 
@@ -194,21 +196,19 @@ classes = (
     CB_LIST_OT_MoveItem,
     )            
 
+
 def register():
     for c in classes:
-        bpy.utils.register_class(c)
-
-    #load default preset
-    """ 
-    custom_buttons_presets = os.path.join(presets_folder, 'custom_buttons', 'buttons') 
-    if not os.path.isdir(custom_buttons_presets): 
-        # makedirs() will also create all the parent folders (like "object") 
-        os.makedirs(custom_buttons_presets) 
-        # Get a list of all the files in your bundled presets folder 
-        files = os.listdir(my_bundled_presets) 
-        # Copy them 
-        [shutil.copy2(os.path.join(my_bundled_presets, f), custom_buttons_presets) for f in files] 
-    """
+        bpy.utils.register_class(c)    
+    
+    #install default preset
+    presets_target_folder = bpy.utils.user_resource('SCRIPTS', "presets/custom_buttons/", create=True)
+    bundled_presets =  os.path.abspath(os.path.dirname(__file__) + '/presets/')
+    preset_files = os.listdir(bundled_presets) 
+    for p in preset_files:
+        if not os.path.isfile(presets_target_folder + p): 
+            print("installing preset: ", p)
+            shutil.copy2(os.path.join(bundled_presets, p), presets_target_folder)            
 
     bpy.types.TOPBAR_HT_upper_bar.prepend(draw_button)
 
