@@ -206,9 +206,9 @@ def register():
     bundled_presets =  os.path.abspath(os.path.dirname(__file__) + '/presets/')
     preset_files = os.listdir(bundled_presets) 
     for p in preset_files:
-        if not os.path.isfile(presets_target_folder + p): 
-            print("installing preset: ", p)
-            shutil.copy2(os.path.join(bundled_presets, p), presets_target_folder)            
+        #if not os.path.isfile(presets_target_folder + p): 
+        print("installing preset: ", p)
+        shutil.copy2(os.path.join(bundled_presets, p), presets_target_folder)            
 
     bpy.types.TOPBAR_HT_upper_bar.prepend(draw_button)
 
