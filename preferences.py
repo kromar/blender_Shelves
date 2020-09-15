@@ -27,12 +27,12 @@ from bpy.props import ( StringProperty,
                         )
 
 
-class CB_Preferences(AddonPreferences):
+class SHELFES_Preferences(AddonPreferences):
     bl_idname = __package__
 
-    default_preset: StringProperty(
-        name="default_preset", 
-        description="default_preset", 
+    default_shelf: StringProperty(
+        name="default_shelf", 
+        description="default_shelf", 
         default="Default") 
 
 
@@ -41,32 +41,33 @@ class CB_Preferences(AddonPreferences):
         layout = self.layout      
 
         row = layout.row(align=True)  
-        preset_label = bpy.types.CB_MT_Presets.bl_label
-        row.menu('CB_MT_Presets', text=self.default_preset)
-        row.operator('custom_buttons_preset.save_preset', text='', icon='ADD')
-        row.operator('custom_buttons_preset.save_preset', text='', icon='REMOVE').remove_active = True
+        preset_label = bpy.types.SHELFES_MT_Presets.bl_label
+        row.menu('SHELFES_MT_Presets', text=self.default_shelf)
+        row.operator('shelfes.save_preset', text='', icon='ADD')
+        row.operator('shelfes.save_preset', text='', icon='REMOVE').remove_active = True
         
         
         row = layout.row(align=True)  
-        #row.operator('self.default_preset', text="set as default",  icon='ADD')
-        row.prop(self, 'default_preset')
-        self.default_preset = preset_label
-        #row.label(text=self.default_preset)
+        #row.operator('self.default_shelf', text="set as default",  icon='ADD')
+        row.prop(self, 'default_shelf')
+        self.default_shelf = preset_label
+        #row.label(text=self.default_shelf)
 
         row = layout.row(align=True)
         col = row.column(align=True)
-        col.template_list("CB_UL_ButtonsList", 
-                            "Custom Header Buttons List ", 
+        col.template_list("SHELFES_UL_ButtonsList", 
+                            "Custom Shelf List ", 
                             scene, 
-                            "custom_buttons_list", 
+                            "shelf_list", 
                             scene, 
-                            "custom_buttons_list_index",                            
+                            "shelf_list_index",                            
                             type='DEFAULT',
                             columns=1,
                         ) 
                         
         col = row.column(align=True)
-        col.operator('custom_buttons_list.new_item', text='', icon='ADD') 
-        col.operator('custom_buttons_list.delete_item', text='', icon='REMOVE')  
-        col.operator('custom_buttons_list.move_item', text='', icon='TRIA_UP').direction = 'UP'   
-        col.operator('custom_buttons_list.move_item', text='', icon='TRIA_DOWN').direction = 'DOWN' 
+        col.operator('shelf_list.new_button', text='', icon='ADD') 
+        col.operator('shelf_list.delete_button', text='', icon='REMOVE') 
+         
+        col.operator('shelf_list.move_button', text='', icon='TRIA_UP').direction = 'UP'   
+        col.operator('shelf_list.move_button', text='', icon='TRIA_DOWN').direction = 'DOWN' 

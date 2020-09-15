@@ -1,4 +1,4 @@
 import bpy
-items = bpy.context.scene.custom_buttons_list
+buttons = bpy.context.scene.shelf_list
 
-items.clear()
+buttons.clear()

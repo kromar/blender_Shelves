@@ -37,8 +37,8 @@ from bpy.props import ( StringProperty,
                         )
 
 bl_info = {
-    "name": "Custom Buttons",
-    "description": "Creat your costom buttons in the Header",
+    "name": "Shelfes",
+    "description": "Create Custom Shelfes",
     "author": "Daniel Grauer",
     "version": (1, 0, 0),
     "blender": (2, 83, 0),
@@ -50,55 +50,55 @@ bl_info = {
 
 def draw_button(self, context):
     scene = context.scene 
-    #if scene.custom_buttons_list:
+    #if scene.shelf_list:
     if context.region.alignment == 'RIGHT':
         layout = self.layout
 
 
         row = layout.row(align=True)
-        for i in range(0, len(scene.custom_buttons_list)):
-            if scene.custom_buttons_list[i].show_button_name:
-                row.operator(operator=scene.custom_buttons_list[i].button_operator, 
-                            text=scene.custom_buttons_list[i].button_name, 
-                            icon=scene.custom_buttons_list[i].button_icon)                                
+        for i in range(0, len(scene.shelf_list)):
+            if scene.shelf_list[i].show_button_name:
+                row.operator(operator=scene.shelf_list[i].button_operator, 
+                            text=scene.shelf_list[i].button_name, 
+                            icon=scene.shelf_list[i].button_icon)                                
             else:
-                row.operator(operator=scene.custom_buttons_list[i].button_operator, 
+                row.operator(operator=scene.shelf_list[i].button_operator, 
                             text="", 
-                            icon=scene.custom_buttons_list[i].button_icon)
+                            icon=scene.shelf_list[i].button_icon)
         
         row = layout.row()
-        preset_label = bpy.types.CB_MT_Presets.bl_label
-        row.menu('CB_MT_Presets', text=preset_label, icon='PRESET')
+        preset_label = bpy.types.SHELFES_MT_Presets.bl_label
+        row.menu('SHELFES_MT_Presets', text=preset_label, icon='PRESET')
 
         return{'FINISHED'}
 
 
-class CB_MT_Presets(Menu):  
+class SHELFES_MT_Presets(Menu):  
     bl_label = "Shelfes"
-    preset_subdir = 'custom_buttons' 
+    preset_subdir = 'shelfes' 
     preset_operator = 'script.execute_preset' 
     draw = Menu.draw_preset
 
 
-class CB_OT_SavePreset(AddPresetBase, Operator): 
+class SHELFES_OT_SavePreset(AddPresetBase, Operator): 
     """ Save Preset """
-    bl_idname = 'custom_buttons_preset.save_preset' 
+    bl_idname = 'shelfes.save_preset' 
     bl_label = 'Save Shelf' 
-    preset_menu = 'CB_MT_Presets' 
-    preset_subdir = 'custom_buttons'
+    preset_menu = 'SHELFES_MT_Presets' 
+    preset_subdir = 'shelfes'
     
     # Common variable used for all preset values     
     preset_defines = [
-        'items = bpy.context.scene.custom_buttons_list'
+        'shelf = bpy.context.scene.shelf_list'
         ] 
     # Properties to store in the preset 
     preset_values = [
-        'items'
+        'shelf'
         ] 
 
 
-class CB_ButtonsList(PropertyGroup): 
-    """Group of properties representing an item in the list."""
+class SHELFES_ButtonsList(PropertyGroup): 
+    """Group of properties representing an button in the list."""
     button_name: StringProperty(
         name="", 
         description="button_name", 
@@ -120,7 +120,7 @@ class CB_ButtonsList(PropertyGroup):
         default=False) 
         
 
-class CB_UL_ButtonsList(UIList): 
+class SHELFES_UL_ButtonsList(UIList): 
     """Custom Buttons List."""    
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index): 
         layout.label(text='', icon='TRIA_RIGHT')
@@ -130,70 +130,70 @@ class CB_UL_ButtonsList(UIList):
         layout.prop(item, "button_operator") 
                     
             
-class CB_LIST_OT_NewItem(Operator): 
-    """Add a new item to the list.""" 
-    bl_idname = "custom_buttons_list.new_item" 
-    bl_label = "Add a new item" 
+class SHELFES_LIST_OT_NewButton(Operator): 
+    """Add a new button to the list.""" 
+    bl_idname = "shelf_list.new_button" 
+    bl_label = "Add a new button" 
     def execute(self, context): 
-        context.scene.custom_buttons_list.add() 
+        context.scene.shelf_list.add() 
         return{'FINISHED'} 
         
         
-class CB_LIST_OT_DeleteItem(Operator): 
-    """Delete the selected item from the list.""" 
-    bl_idname = "custom_buttons_list.delete_item" 
-    bl_label = "Deletes an item" 
+class SHELFES_LIST_OT_DeleteButton(Operator): 
+    """Delete the selected button from the list.""" 
+    bl_idname = "shelf_list.delete_button" 
+    bl_label = "Deletes a button" 
     
     @classmethod 
     def poll(cls, context): 
-        return context.scene.custom_buttons_list 
+        return context.scene.shelf_list 
         
     def execute(self, context): 
-        custom_buttons_list = context.scene.custom_buttons_list 
-        index = context.scene.custom_buttons_list_index 
-        custom_buttons_list.remove(index) 
-        context.scene.custom_buttons_list_index = min(max(0, index - 1), len(custom_buttons_list) - 1) 
+        shelf_list = context.scene.shelf_list 
+        index = context.scene.shelf_list_index 
+        shelf_list.remove(index) 
+        context.scene.shelf_list_index = min(max(0, index - 1), len(shelf_list) - 1) 
         return{'FINISHED'} 
         
         
-class CB_LIST_OT_MoveItem(Operator): 
-    """Move an item in the list.""" 
-    bl_idname = "custom_buttons_list.move_item" 
-    bl_label = "Move an item in the list" 
+class SHELFES_LIST_OT_MoveButton(Operator): 
+    """Move a button in the list.""" 
+    bl_idname = "shelf_list.move_button" 
+    bl_label = "Move a button in the list" 
     direction: bpy.props.EnumProperty(items=(('UP', 'Up', ""), ('DOWN', 'Down', ""),)) 
     
     @classmethod 
     def poll(cls, context): 
-        return context.scene.custom_buttons_list 
+        return context.scene.shelf_list 
         
     def move_index(self): 
-        """ Move index of an item render queue while clamping it. """ 
-        index = bpy.context.scene.custom_buttons_list_index 
-        list_length = len(bpy.context.scene.custom_buttons_list) - 1 
+        """ Move index of a button render queue while clamping it. """ 
+        index = bpy.context.scene.shelf_list_index 
+        list_length = len(bpy.context.scene.shelf_list) - 1 
         # (index starts at 0) 
         new_index = index + (-1 if self.direction == 'UP' else 1) 
-        bpy.context.scene.custom_buttons_list_index = max(0, min(new_index, list_length)) 
+        bpy.context.scene.shelf_list_index = max(0, min(new_index, list_length)) 
         
     def execute(self, context): 
-        custom_buttons_list = context.scene.custom_buttons_list 
-        index = context.scene.custom_buttons_list_index 
+        shelf_list = context.scene.shelf_list 
+        index = context.scene.shelf_list_index 
         neighbor = index + (-1 if self.direction == 'UP' else 1) 
-        custom_buttons_list.move(neighbor, index) 
+        shelf_list.move(neighbor, index) 
         self.move_index() 
         return{'FINISHED'} 
         
 
 classes = (
-    preferences.CB_Preferences,
+    preferences.SHELFES_Preferences,
 
-    CB_MT_Presets,
-    CB_OT_SavePreset,
+    SHELFES_MT_Presets,
+    SHELFES_OT_SavePreset,
 
-    CB_ButtonsList,
-    CB_UL_ButtonsList,
-    CB_LIST_OT_NewItem,
-    CB_LIST_OT_DeleteItem,
-    CB_LIST_OT_MoveItem,
+    SHELFES_ButtonsList,
+    SHELFES_UL_ButtonsList,
+    SHELFES_LIST_OT_NewButton,
+    SHELFES_LIST_OT_DeleteButton,
+    SHELFES_LIST_OT_MoveButton,
     )            
 
 
@@ -202,7 +202,7 @@ def register():
         bpy.utils.register_class(c)    
     
     #install default preset
-    presets_target_folder = bpy.utils.user_resource('SCRIPTS', "presets/custom_buttons/", create=True)
+    presets_target_folder = bpy.utils.user_resource('SCRIPTS', "presets/shelfes/", create=True)
     bundled_presets =  os.path.abspath(os.path.dirname(__file__) + '/presets/')
     preset_files = os.listdir(bundled_presets) 
     for p in preset_files:
@@ -212,13 +212,13 @@ def register():
 
     bpy.types.TOPBAR_HT_upper_bar.prepend(draw_button)
 
-    bpy.types.Scene.custom_buttons_list = CollectionProperty(type = CB_ButtonsList) 
-    bpy.types.Scene.custom_buttons_list_index = IntProperty(default = 0) 
+    bpy.types.Scene.shelf_list = CollectionProperty(type = SHELFES_ButtonsList) 
+    bpy.types.Scene.shelf_list_index = IntProperty(default = 0) 
     
 
 def unregister():
-    del bpy.types.Scene.custom_buttons_list 
-    del bpy.types.Scene.custom_buttons_list_index 
+    del bpy.types.Scene.shelf_list 
+    del bpy.types.Scene.shelf_list_index 
     bpy.types.TOPBAR_HT_upper_bar.remove(draw_button)
     [bpy.utils.unregister_class(c) for c in classes]
 
