@@ -40,11 +40,12 @@ bl_info = {
     "name": "Shelfes",
     "description": "Create Custom Shelfes",
     "author": "Daniel Grauer",
-    "version": (1, 0, 0),
+    "version": (1, 1, 0),
     "blender": (2, 83, 0),
     "location": "Header",
     "category": "System",
-    "wiki_url": ""
+    "wiki_url": "https://github.com/kromar/blender_Shelfes",
+    "tracker_url": "https://github.com/kromar/blender_Shelfes/issues/new",
 }
 
 
