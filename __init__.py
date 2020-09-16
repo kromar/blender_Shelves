@@ -37,15 +37,15 @@ from bpy.props import ( StringProperty,
                         )
 
 bl_info = {
-    "name": "Shelfes",
-    "description": "Create Custom Shelfes",
+    "name": "Shelves",
+    "description": "Create Custom Shelves",
     "author": "Daniel Grauer",
-    "version": (1, 1, 0),
+    "version": (1, 1, 1),
     "blender": (2, 83, 0),
     "location": "Header",
     "category": "System",
-    "wiki_url": "https://github.com/kromar/blender_Shelfes",
-    "tracker_url": "https://github.com/kromar/blender_Shelfes/issues/new",
+    "wiki_url": "https://github.com/kromar/blender_Shelves",
+    "tracker_url": "https://github.com/kromar/blender_Shelves/issues/new",
 }
 
 
@@ -68,25 +68,25 @@ def draw_button(self, context):
                             icon=scene.shelf_list[i].button_icon)
         
         row = layout.row()
-        preset_label = bpy.types.SHELFES_MT_Presets.bl_label
-        row.menu('SHELFES_MT_Presets', text=preset_label, icon='PRESET')
+        preset_label = bpy.types.SHELVES_MT_Presets.bl_label
+        row.menu('SHELVES_MT_Presets', text=preset_label, icon='PRESET')
 
         return{'FINISHED'}
 
 
-class SHELFES_MT_Presets(Menu):  
-    bl_label = "Shelfes"
-    preset_subdir = 'shelfes' 
+class SHELVES_MT_Presets(Menu):  
+    bl_label = "Shelves"
+    preset_subdir = 'shelves' 
     preset_operator = 'script.execute_preset' 
     draw = Menu.draw_preset
 
 
-class SHELFES_OT_SavePreset(AddPresetBase, Operator): 
+class SHELVES_OT_SavePreset(AddPresetBase, Operator): 
     """ Save Preset """
-    bl_idname = 'shelfes.save_preset' 
+    bl_idname = 'shelves.save_preset' 
     bl_label = 'Save Shelf' 
-    preset_menu = 'SHELFES_MT_Presets' 
-    preset_subdir = 'shelfes'
+    preset_menu = 'SHELVES_MT_Presets' 
+    preset_subdir = 'shelves'
     
     # Common variable used for all preset values     
     preset_defines = [
@@ -98,7 +98,7 @@ class SHELFES_OT_SavePreset(AddPresetBase, Operator):
         ] 
 
 
-class SHELFES_ButtonsList(PropertyGroup): 
+class SHELVES_ButtonsList(PropertyGroup): 
     """Group of properties representing an button in the list."""
     button_name: StringProperty(
         name="", 
@@ -121,7 +121,7 @@ class SHELFES_ButtonsList(PropertyGroup):
         default=False) 
         
 
-class SHELFES_UL_ButtonsList(UIList): 
+class SHELVES_UL_ButtonsList(UIList): 
     """Custom Buttons List."""    
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index): 
         layout.label(text='', icon='TRIA_RIGHT')
@@ -131,7 +131,7 @@ class SHELFES_UL_ButtonsList(UIList):
         layout.prop(item, "button_operator") 
                     
             
-class SHELFES_LIST_OT_NewButton(Operator): 
+class SHELVES_LIST_OT_NewButton(Operator): 
     """Add a new button to the list.""" 
     bl_idname = "shelf_list.new_button" 
     bl_label = "Add a new button" 
@@ -140,7 +140,7 @@ class SHELFES_LIST_OT_NewButton(Operator):
         return{'FINISHED'} 
         
         
-class SHELFES_LIST_OT_DeleteButton(Operator): 
+class SHELVES_LIST_OT_DeleteButton(Operator): 
     """Delete the selected button from the list.""" 
     bl_idname = "shelf_list.delete_button" 
     bl_label = "Deletes a button" 
@@ -157,7 +157,7 @@ class SHELFES_LIST_OT_DeleteButton(Operator):
         return{'FINISHED'} 
         
         
-class SHELFES_LIST_OT_MoveButton(Operator): 
+class SHELVES_LIST_OT_MoveButton(Operator): 
     """Move a button in the list.""" 
     bl_idname = "shelf_list.move_button" 
     bl_label = "Move a button in the list" 
@@ -185,16 +185,16 @@ class SHELFES_LIST_OT_MoveButton(Operator):
         
 
 classes = (
-    preferences.SHELFES_Preferences,
+    preferences.SHELVES_Preferences,
 
-    SHELFES_MT_Presets,
-    SHELFES_OT_SavePreset,
+    SHELVES_MT_Presets,
+    SHELVES_OT_SavePreset,
 
-    SHELFES_ButtonsList,
-    SHELFES_UL_ButtonsList,
-    SHELFES_LIST_OT_NewButton,
-    SHELFES_LIST_OT_DeleteButton,
-    SHELFES_LIST_OT_MoveButton,
+    SHELVES_ButtonsList,
+    SHELVES_UL_ButtonsList,
+    SHELVES_LIST_OT_NewButton,
+    SHELVES_LIST_OT_DeleteButton,
+    SHELVES_LIST_OT_MoveButton,
     )            
 
 
@@ -203,7 +203,7 @@ def register():
         bpy.utils.register_class(c)    
     
     #install default preset
-    presets_target_folder = bpy.utils.user_resource('SCRIPTS', "presets/shelfes/", create=True)
+    presets_target_folder = bpy.utils.user_resource('SCRIPTS', "presets/shelves/", create=True)
     bundled_presets =  os.path.abspath(os.path.dirname(__file__) + '/presets/')
     preset_files = os.listdir(bundled_presets) 
     for p in preset_files:
@@ -213,7 +213,7 @@ def register():
 
     bpy.types.TOPBAR_HT_upper_bar.prepend(draw_button)
 
-    bpy.types.Scene.shelf_list = CollectionProperty(type = SHELFES_ButtonsList) 
+    bpy.types.Scene.shelf_list = CollectionProperty(type = SHELVES_ButtonsList) 
     bpy.types.Scene.shelf_list_index = IntProperty(default = 0) 
     
 

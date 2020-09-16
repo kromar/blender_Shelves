@@ -27,7 +27,7 @@ from bpy.props import ( StringProperty,
                         )
 
 
-class SHELFES_Preferences(AddonPreferences):
+class SHELVES_Preferences(AddonPreferences):
     bl_idname = __package__
 
     default_shelf: StringProperty(
@@ -41,10 +41,10 @@ class SHELFES_Preferences(AddonPreferences):
         layout = self.layout      
 
         row = layout.row(align=True)  
-        preset_label = bpy.types.SHELFES_MT_Presets.bl_label
-        row.menu('SHELFES_MT_Presets', text=self.default_shelf)
-        row.operator('shelfes.save_preset', text='', icon='ADD')
-        row.operator('shelfes.save_preset', text='', icon='REMOVE').remove_active = True
+        preset_label = bpy.types.SHELVES_MT_Presets.bl_label
+        row.menu('SHELVES_MT_Presets', text=self.default_shelf)
+        row.operator('shelves.save_preset', text='', icon='ADD')
+        row.operator('shelves.save_preset', text='', icon='REMOVE').remove_active = True
         
         
         row = layout.row(align=True)  
@@ -55,7 +55,7 @@ class SHELFES_Preferences(AddonPreferences):
 
         row = layout.row(align=True)
         col = row.column(align=True)
-        col.template_list("SHELFES_UL_ButtonsList", 
+        col.template_list("SHELVES_UL_ButtonsList", 
                             "Custom Shelf List ", 
                             scene, 
                             "shelf_list", 
