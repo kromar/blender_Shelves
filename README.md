@@ -36,7 +36,8 @@ This will allow you to copy the operator from belnders UI elements
 Paste the python command in the operator field and remove the brackets at the end and the parts in the front (this might vary a bit from operator to operator)
 ![image](https://user-images.githubusercontent.com/1472884/93377132-ea4ecf80-f85a-11ea-80b3-523dfa0b226e.png)
 
-6. save you rnew Shelve
+6. save you rnew Shelve 
+Note: if you add new buttons you will need to add a new shelv with the same name to overwrite and save the existing shelve
 ![image](https://user-images.githubusercontent.com/1472884/93377610-87aa0380-f85b-11ea-99ee-bbf7b4ed2e5b.png)
 ![image](https://user-images.githubusercontent.com/1472884/93378096-3c442500-f85c-11ea-8068-447c9b7aec86.png)
 
