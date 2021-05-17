@@ -6,7 +6,7 @@ This addon allows you to create custom buttons and buttons templates for Blender
 Quickly switch between shelves to ahve actions for different tasks at hand.
 ![shelves_switching](https://user-images.githubusercontent.com/1472884/93270182-d353a300-f7b0-11ea-9d6b-9a25267c1ef2.gif)
 
-##Addon Preferences Description
+## Addon Preferences Description
 ![image](https://user-images.githubusercontent.com/1472884/93374529-1e27f600-f857-11ea-9a2a-18437e385f89.png)
 
 
@@ -15,7 +15,7 @@ Quickly switch between shelves to ahve actions for different tasks at hand.
 1. go to the user preferences of blender, navigate to the Interface section and enable "Developer Extras"
 ![image](https://user-images.githubusercontent.com/1472884/93373229-5a5a5700-f855-11ea-917d-526707c86f64.png)
 
-This will allow you to copy the operator from belnders UI elements
+This will allow you to copy the operator from Blender's UI elements
 ![image](https://user-images.githubusercontent.com/1472884/93373392-8d9ce600-f855-11ea-87f8-fe52faf7cc39.png)
 
 
