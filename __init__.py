@@ -40,7 +40,7 @@ bl_info = {
     "name": "Shelves",
     "description": "Create Custom Shelves",
     "author": "Daniel Grauer",
-    "version": (1, 1, 1),
+    "version": (1, 1, 2),
     "blender": (2, 83, 0),
     "location": "Header",
     "category": "System",
