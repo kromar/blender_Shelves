@@ -113,7 +113,12 @@ class SHELVES_ButtonsList(PropertyGroup):
     button_icon: StringProperty(
         name="", 
         description="buton_icon", 
-        default="FUND")  
+        default='FUND')  
+    
+    select_icon: StringProperty(
+        name="", 
+        description="select_icon", 
+        default='EYEDROPPER')  
 
     show_button_name: BoolProperty(
         name="",
@@ -125,6 +130,7 @@ class SHELVES_UL_ButtonsList(UIList):
     """Custom Buttons List."""    
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index): 
         layout.label(text='', icon='TRIA_RIGHT')
+        layout.operator("iv.icons_show")
         layout.prop(item, "button_icon", icon = item.button_icon) 
         layout.prop(item, "button_name") 
         layout.prop(item, "show_button_name")
