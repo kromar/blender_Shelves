@@ -203,7 +203,7 @@ def register():
         bpy.utils.register_class(c)    
     
     #install default preset
-    presets_target_folder = bpy.utils.user_resource('SCRIPTS', "presets/shelves/", create=True)
+    presets_target_folder = bpy.utils.user_resource('SCRIPTS', path="presets/shelves/", create=True)
     bundled_presets =  os.path.abspath(os.path.dirname(__file__) + '/presets/')
     preset_files = os.listdir(bundled_presets) 
     for p in preset_files:
